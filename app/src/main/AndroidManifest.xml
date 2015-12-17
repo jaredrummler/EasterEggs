@@ -16,8 +16,9 @@
   ~
   -->
 
-<manifest package="com.jaredrummler.android.eastereggs"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest
+    package="com.jaredrummler.android.eastereggs"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
   <application
       android:allowBackup="true"
@@ -62,6 +63,32 @@
       <intent-filter>
         <action android:name="android.service.dreams.DreamService"/>
 
+        <category android:name="android.intent.category.DEFAULT"/>
+      </intent-filter>
+    </service>
+
+    <!-- beanbag -->
+    <activity
+        android:name="com.jaredrummler.android.eastereggs.beanbag.BeanBag"
+        android:excludeFromRecents="true"
+        android:exported="true"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/redbean2"
+        android:launchMode="singleInstance"
+        android:theme="@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+      </intent-filter>
+    </activity>
+    <!-- Beans in space -->
+    <service
+        android:name="com.jaredrummler.android.eastereggs.beanbag.BeanBagDream"
+        android:enabled="false"
+        android:exported="true"
+        android:label="BeanFlinger">
+      <intent-filter>
+        <action android:name="android.service.dreams.DreamService"/>
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
     </service>
