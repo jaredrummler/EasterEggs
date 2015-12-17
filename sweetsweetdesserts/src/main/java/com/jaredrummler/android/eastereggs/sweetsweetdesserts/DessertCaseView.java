@@ -21,7 +21,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -369,7 +368,6 @@ public class DessertCaseView extends FrameLayout {
     fillFreeList(DURATION);
   }
 
-  @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
   public synchronized void fillFreeList(int animationLen) {
     final Context ctx = getContext();
     final LayoutParams lp = new LayoutParams(cellSize, cellSize);
@@ -426,7 +424,11 @@ public class DessertCaseView extends FrameLayout {
         v.setScaleX(0.5f * s);
         v.setScaleY(0.5f * s);
         v.setAlpha(0f);
-        v.animate().withLayer().scaleX(s).scaleY(s).alpha(1f).setDuration(animationLen);
+        ViewPropertyAnimator animator = v.animate();
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+          animator.withLayer();
+        }
+        animator.scaleX(s).scaleY(s).alpha(1f).setDuration(animationLen);
       }
     }
   }
