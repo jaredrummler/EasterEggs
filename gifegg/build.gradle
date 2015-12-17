@@ -15,4 +15,18 @@
  *
  */
 
-include ':app', ':sweetsweetdesserts', ':beanbag', ':nyandroid', ':gifegg'
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 23
+    }
+}
+
+dependencies {
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
+}

@@ -48,8 +48,8 @@
           android:textSize="30sp"
           tools:text="Title"/>
 
-      <pl.droidsonroids.gif.GifImageView
-          android:id="@+id/gif"
+      <pl.droidsonroids.drawableId.GifImageView
+          android:id="@+id/drawableId"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_below="@id/title"

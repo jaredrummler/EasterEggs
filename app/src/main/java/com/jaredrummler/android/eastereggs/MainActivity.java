@@ -18,6 +18,7 @@
 package com.jaredrummler.android.eastereggs;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jaredrummler.android.eastereggs.beanbag.BeanBag;
+import com.jaredrummler.android.eastereggs.gif.GifEasterEgg;
 import com.jaredrummler.android.eastereggs.nyandroid.Nyandroid;
 import com.jaredrummler.android.eastereggs.sweetsweetdesserts.DessertCase;
 
@@ -54,19 +56,13 @@ public class MainActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
 
     List<EasterEgg> eggs = new ArrayList<>();
-    Intent sweetsweetdesserts = new Intent(this, DessertCase.class);
-    eggs.add(
-        new EasterEgg("sweetsweetdesserts", R.drawable.sweetsweetdesserts, sweetsweetdesserts));
+    eggs.add(new EasterEgg("sweetsweetdesserts", R.drawable.sweetsweetdesserts, this, DessertCase.class));
+    eggs.add(new EasterEgg("beanbag", R.drawable.beanbag, this, BeanBag.class));
+    eggs.add(new EasterEgg("nyandroid", R.drawable.nyandroid, this, Nyandroid.class));
+    eggs.add(new EasterEgg("gifegg", R.drawable.easteregg, this, GifEasterEgg.class));
 
-    Intent beanbag = new Intent(this, BeanBag.class);
-    eggs.add(new EasterEgg("beanbag", R.drawable.beanbag, beanbag));
-
-    Intent nyandroid = new Intent(this, Nyandroid.class);
-    eggs.add(new EasterEgg("nyandroid", R.drawable.nyandroid, nyandroid));
-
-    Adapter adapter = new Adapter(eggs);
     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-
+    Adapter adapter = new Adapter(eggs);
     recyclerView.setAdapter(adapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
   }
@@ -114,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
       EasterEgg egg = eggs.get(position);
       GifImageView gif = holder.find(R.id.gif);
       TextView title = holder.find(R.id.title);
-      gif.setImageResource(egg.gif);
+      gif.setImageResource(egg.drawableId);
       title.setText(egg.name);
     }
 
@@ -162,12 +158,16 @@ public class MainActivity extends AppCompatActivity {
   public static class EasterEgg {
 
     public final String name;
-    public final int gif;
+    public final int drawableId;
     public final Intent intent;
 
-    public EasterEgg(String name, int gif, Intent intent) {
+    public EasterEgg(String name, int drawableId, Context packageContext, Class<?> cls) {
+      this(name, drawableId, new Intent(packageContext, cls));
+    }
+
+    public EasterEgg(String name, int drawableId, Intent intent) {
       this.name = name;
-      this.gif = gif;
+      this.drawableId = drawableId;
       this.intent = intent;
     }
 
