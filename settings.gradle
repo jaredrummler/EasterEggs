@@ -15,4 +15,4 @@
  *
  */
 
-include ':app', ':sweetsweetdesserts', ':beanbag'
+include ':app', ':sweetsweetdesserts', ':beanbag', ':nyandroid'

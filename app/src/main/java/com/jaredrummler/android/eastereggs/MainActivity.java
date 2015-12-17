@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jaredrummler.android.eastereggs.beanbag.BeanBag;
+import com.jaredrummler.android.eastereggs.nyandroid.Nyandroid;
 import com.jaredrummler.android.eastereggs.sweetsweetdesserts.DessertCase;
 
 import java.util.ArrayList;
@@ -59,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
     Intent beanbag = new Intent(this, BeanBag.class);
     eggs.add(new EasterEgg("beanbag", R.drawable.beanbag, beanbag));
+
+    Intent nyandroid = new Intent(this, Nyandroid.class);
+    eggs.add(new EasterEgg("nyandroid", R.drawable.nyandroid, nyandroid));
 
     Adapter adapter = new Adapter(eggs);
     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
