@@ -18,6 +18,8 @@
 
 package com.jaredrummler.android.eastereggs.beanbag;
 
+import android.animation.TimeAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -32,8 +34,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
-import com.nineoldandroids.animation.TimeAnimator;
 
 import java.util.Random;
 
@@ -231,6 +231,7 @@ public class Board extends FrameLayout {
     }
   }
 
+  // TimeAnimator exists on 14+ but is hidden until 16.
   TimeAnimator mAnim;
   private int boardWidth;
   private int boardHeight;
@@ -250,6 +251,7 @@ public class Board extends FrameLayout {
     setWillNotDraw(!DEBUG);
   }
 
+  @SuppressLint("NewApi")
   private void reset() {
     removeAllViews();
 
@@ -319,6 +321,7 @@ public class Board extends FrameLayout {
     boardHeight = h;
   }
 
+  @SuppressLint("NewApi")
   public void startAnimation() {
     stopAnimation();
     if (mAnim == null) {
