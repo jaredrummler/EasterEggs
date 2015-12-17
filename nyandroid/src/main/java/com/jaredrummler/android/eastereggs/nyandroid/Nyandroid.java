@@ -19,8 +19,8 @@
 package com.jaredrummler.android.eastereggs.nyandroid;
 
 import android.animation.TimeAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.AttributeSet;
@@ -34,30 +34,16 @@ import java.util.Random;
 
 public class Nyandroid extends Activity {
 
-  final static boolean DEBUG = false;
-
   public static class Board extends FrameLayout {
 
-    public static final boolean FIXED_STARS = true;
-    public static final int NUM_CATS = 20;
-
-    static Random sRNG = new Random();
+    private static final Random RANDOM = new Random();
 
     static float lerp(float a, float b, float f) {
       return (b - a) * f + a;
     }
 
     static float randfrange(float a, float b) {
-      return lerp(a, b, sRNG.nextFloat());
-    }
-
-    static int randsign() {
-      return sRNG.nextBoolean() ? 1 : -1;
-    }
-
-    static <E> E pick(E[] array) {
-      if (array.length == 0) return null;
-      return array[sRNG.nextInt(array.length)];
+      return lerp(a, b, RANDOM.nextFloat());
     }
 
     public class FlyingCat extends ImageView {
@@ -65,23 +51,14 @@ public class Nyandroid extends Activity {
       public static final float VMAX = 1000.0f;
       public static final float VMIN = 100.0f;
 
-      public float v, vr;
+      public float v;
 
       public float dist;
       public float z;
 
-      public ComponentName component;
-
       public FlyingCat(Context context, AttributeSet as) {
         super(context, as);
         setImageResource(R.drawable.nyandroid_anim); // @@@
-
-        if (DEBUG) setBackgroundColor(0x80FF0000);
-      }
-
-      public String toString() {
-        return String.format("<cat (%.1f, %.1f) (%d x %d)>",
-            getX(), getY(), getWidth(), getHeight());
       }
 
       public void reset() {
@@ -94,8 +71,6 @@ public class Nyandroid extends Activity {
         v = lerp(VMIN, VMAX, z);
 
         dist = 0;
-
-//                android.util.Log.d("Nyandroid", "reset cat: " + this);
       }
 
       public void update(float dt) {
@@ -114,39 +89,36 @@ public class Nyandroid extends Activity {
       setBackgroundColor(0xFF003366);
     }
 
+    @SuppressLint("NewApi")
     private void reset() {
-//            android.util.Log.d("Nyandroid", "board reset");
       removeAllViews();
 
       final ViewGroup.LayoutParams wrap = new ViewGroup.LayoutParams(
           ViewGroup.LayoutParams.WRAP_CONTENT,
           ViewGroup.LayoutParams.WRAP_CONTENT);
 
-      if (FIXED_STARS) {
-        for (int i = 0; i < 20; i++) {
-          ImageView fixedStar = new ImageView(getContext(), null);
-          if (DEBUG) fixedStar.setBackgroundColor(0x8000FF80);
-          fixedStar.setImageResource(R.drawable.star_anim); // @@@
-          addView(fixedStar, wrap);
-          final float scale = randfrange(0.1f, 1f);
-          fixedStar.setScaleX(scale);
-          fixedStar.setScaleY(scale);
-          fixedStar.setX(randfrange(0, getWidth()));
-          fixedStar.setY(randfrange(0, getHeight()));
-          final AnimationDrawable anim = (AnimationDrawable) fixedStar.getDrawable();
-          postDelayed(new Runnable() {
+      for (int i = 0; i < 20; i++) {
+        ImageView fixedStar = new ImageView(getContext(), null);
+        fixedStar.setImageResource(R.drawable.star_anim); // @@@
+        addView(fixedStar, wrap);
+        final float scale = randfrange(0.1f, 1f);
+        fixedStar.setScaleX(scale);
+        fixedStar.setScaleY(scale);
+        fixedStar.setX(randfrange(0, getWidth()));
+        fixedStar.setY(randfrange(0, getHeight()));
+        final AnimationDrawable anim = (AnimationDrawable) fixedStar.getDrawable();
+        postDelayed(new Runnable() {
 
-            public void run() {
-              anim.start();
-            }
-          }, (int) randfrange(0, 1000));
-        }
+          public void run() {
+            anim.start();
+          }
+        }, (int) randfrange(0, 1000));
       }
 
-      for (int i = 0; i < NUM_CATS; i++) {
+      for (int i = 0; i < 20; i++) {
         FlyingCat nv = new FlyingCat(getContext(), null);
         addView(nv, wrap);
-        nv.z = ((float) i / NUM_CATS);
+        nv.z = ((float) i / 20);
         nv.z *= nv.z;
         nv.reset();
         nv.setX(randfrange(0, Board.this.getWidth()));
@@ -165,9 +137,7 @@ public class Nyandroid extends Activity {
       mAnim = new TimeAnimator();
       mAnim.setTimeListener(new TimeAnimator.TimeListener() {
 
-        public void onTimeUpdate(TimeAnimator animation, long totalTime, long deltaTime) {
-          // setRotation(totalTime * 0.01f); // not as cool as you would think
-//                    android.util.Log.d("Nyandroid", "t=" + totalTime);
+        @Override public void onTimeUpdate(TimeAnimator animation, long totalTime, long deltaTime) {
 
           for (int i = 0; i < getChildCount(); i++) {
             View v = getChildAt(i);
@@ -187,35 +157,29 @@ public class Nyandroid extends Activity {
       });
     }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    @Override protected void onSizeChanged(int w, int h, int oldw, int oldh) {
       super.onSizeChanged(w, h, oldw, oldh);
-//            android.util.Log.d("Nyandroid", "resized: " + w + "x" + h);
       post(new Runnable() {
 
-        public void run() {
+        @SuppressLint("NewApi")
+        @Override public void run() {
           reset();
           mAnim.start();
         }
       });
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
+    @Override protected void onDetachedFromWindow() {
       super.onDetachedFromWindow();
       mAnim.cancel();
     }
 
-    @Override
-    public boolean isOpaque() {
+    @Override public boolean isOpaque() {
       return true;
     }
   }
 
-  private Board mBoard;
-
-  @Override
-  public void onStart() {
+  @Override public void onStart() {
     super.onStart();
 
     getWindow().addFlags(
@@ -224,26 +188,22 @@ public class Nyandroid extends Activity {
     );
   }
 
-  @Override
-  public void onResume() {
+  @Override public void onResume() {
     super.onResume();
-    mBoard = new Board(this, null);
-    setContentView(mBoard);
+    Board board = new Board(this, null);
+    setContentView(board);
 
-    mBoard.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+    board.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
 
-      @Override
-      public void onSystemUiVisibilityChange(int vis) {
+      @Override public void onSystemUiVisibilityChange(int vis) {
         if (0 == (vis & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)) {
-          Nyandroid.this.finish();
+          finish();
         }
       }
     });
   }
 
-  @Override
-  public void onUserInteraction() {
-//        android.util.Log.d("Nyandroid", "finishing on user interaction");
+  @Override public void onUserInteraction() {
     finish();
   }
 
