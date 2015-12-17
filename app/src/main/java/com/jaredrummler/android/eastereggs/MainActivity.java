@@ -17,44 +17,55 @@
 
 package com.jaredrummler.android.eastereggs;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.jaredrummler.android.eastereggs.sweetsweetdesserts.DessertCase;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import pl.droidsonroids.gif.GifImageView;
 
 public class MainActivity extends AppCompatActivity {
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
-    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-    fab.setOnClickListener(new View.OnClickListener() {
+    List<EasterEgg> eggs = new ArrayList<>();
+    Intent sweetsweetdesserts = new Intent(this, DessertCase.class);
+    eggs.add(
+        new EasterEgg("sweetsweetdesserts", R.drawable.sweetsweetdesserts, sweetsweetdesserts));
 
-      @Override
-      public void onClick(View view) {
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-            .setAction("Action", null).show();
-      }
-    });
+    Adapter adapter = new Adapter(eggs);
+    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+
+    recyclerView.setAdapter(adapter);
+    recyclerView.setLayoutManager(new LinearLayoutManager(this));
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.menu_main, menu);
     return true;
   }
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
     // Handle action bar item clicks here. The action bar will
     // automatically handle clicks on the Home/Up button, so long
     // as you specify a parent activity in AndroidManifest.xml.
@@ -67,4 +78,89 @@ public class MainActivity extends AppCompatActivity {
 
     return super.onOptionsItemSelected(item);
   }
+
+  public static class Adapter extends RecyclerView.Adapter<ViewHolder> {
+
+    private final List<EasterEgg> eggs;
+
+    private final ViewHolder.OnClickListener onClickListener = new ViewHolder.OnClickListener() {
+
+      @Override public void onClick(View v, int position) {
+        v.getContext().startActivity(eggs.get(position).intent);
+      }
+    };
+
+    public Adapter(List<EasterEgg> eggs) {
+      this.eggs = eggs;
+    }
+
+    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+      View v =
+          LayoutInflater.from(parent.getContext()).inflate(R.layout.item_easteregg, parent, false);
+      return new ViewHolder(v).setOnClickListener(R.id.cardview, onClickListener);
+    }
+
+    @Override public void onBindViewHolder(ViewHolder holder, int position) {
+      EasterEgg egg = eggs.get(position);
+      GifImageView gif = holder.find(R.id.gif);
+      TextView title = holder.find(R.id.title);
+      gif.setImageResource(egg.gif);
+      title.setText(egg.name);
+    }
+
+    @Override public int getItemCount() {
+      return eggs.size();
+    }
+
+  }
+
+  public static class ViewHolder extends RecyclerView.ViewHolder {
+
+    private final SparseArray<View> views = new SparseArray<>();
+
+    public ViewHolder(View itemView) {
+      super(itemView);
+    }
+
+    public ViewHolder setOnClickListener(@IdRes int id, final OnClickListener listener) {
+      find(id).setOnClickListener(new View.OnClickListener() {
+
+        @Override public void onClick(View v) {
+          listener.onClick(v, getLayoutPosition());
+        }
+      });
+      return this;
+    }
+
+    public <T extends View> T find(@IdRes int id) {
+      View view = views.get(id);
+      if (view == null) {
+        view = itemView.findViewById(id);
+        views.put(id, view);
+      }
+      //noinspection unchecked
+      return (T) view;
+    }
+
+    public interface OnClickListener {
+
+      void onClick(View v, int position);
+    }
+
+  }
+
+  public static class EasterEgg {
+
+    public final String name;
+    public final int gif;
+    public final Intent intent;
+
+    public EasterEgg(String name, int gif, Intent intent) {
+      this.name = name;
+      this.gif = gif;
+      this.intent = intent;
+    }
+
+  }
+
 }

@@ -16,7 +16,8 @@
   ~
   -->
 
-<RelativeLayout
+<android.support.v7.widget.RecyclerView
+    android:id="@+id/recyclerview"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -30,8 +31,4 @@
     tools:context="com.jaredrummler.android.eastereggs.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"/>
-</RelativeLayout>
+</android.support.v7.widget.RecyclerView>
