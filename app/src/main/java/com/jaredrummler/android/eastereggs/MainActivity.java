@@ -17,7 +17,9 @@
 
 package com.jaredrummler.android.eastereggs;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +43,8 @@ import pl.droidsonroids.gif.GifImageView;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String GITHUB_URL = "https://github.com/jaredrummler/EasterEggs";
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -60,22 +64,20 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.menu_main, menu);
     return true;
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
     int id = item.getItemId();
-
     //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings) {
+    if (id == R.id.action_github) {
+      try {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_URL)));
+      } catch (ActivityNotFoundException ignored) {
+      }
       return true;
     }
-
     return super.onOptionsItemSelected(item);
   }
 
