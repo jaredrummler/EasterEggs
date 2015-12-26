@@ -111,7 +111,7 @@
 
     <!-- gifegg -->
     <activity
-        android:name="com.jaredrummler.android.eastereggs.drawableId.GifEasterEgg"
+        android:name="com.jaredrummler.android.eastereggs.gif.GifEasterEgg"
         android:excludeFromRecents="true"
         android:exported="true"
         android:hardwareAccelerated="true"
