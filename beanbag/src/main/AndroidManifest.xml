@@ -15,6 +15,35 @@
   ~
   -->
 
-<manifest package="com.jaredrummler.android.eastereggs.beanbag">
+<manifest
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.jaredrummler.android.eastereggs.beanbag"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
+  <application>
+    <activity
+        android:name="com.jaredrummler.android.eastereggs.beanbag.BeanBag"
+        android:excludeFromRecents="true"
+        android:exported="true"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/redbean2"
+        android:launchMode="singleInstance"
+        android:theme="@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+      </intent-filter>
+    </activity>
+    <service
+        android:name="com.jaredrummler.android.eastereggs.beanbag.BeanBagDream"
+        android:enabled="false"
+        android:exported="true"
+        android:label="BeanFlinger"
+        tools:ignore="ExportedService">
+      <intent-filter>
+        <action android:name="android.service.dreams.DreamService"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+      </intent-filter>
+    </service>
+  </application>
 </manifest>

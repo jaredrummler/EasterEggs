@@ -15,6 +15,23 @@
   ~
   -->
 
-<manifest package="com.jaredrummler.android.eastereggs.gif">
+<manifest
+    package="com.jaredrummler.android.eastereggs.gif"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
+  <application>
+    <activity
+        android:name="com.jaredrummler.android.eastereggs.gif.GifEasterEgg"
+        android:excludeFromRecents="true"
+        android:exported="true"
+        android:hardwareAccelerated="true"
+        android:launchMode="singleInstance"
+        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+      </intent-filter>
+    </activity>
+
+  </application>
 </manifest>
